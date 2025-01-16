@@ -256,12 +256,12 @@
             }).then((result) => {
                 if (result.value) {
 
-                    window.location.href = `./api/task/deleteTask.php?id=${id}`;
                     Swal.fire({
                         title: "Deleted!",
                         text: "Your file has been deleted.",
                         icon: "success"
                     });
+                    window.location.href = `./api/task/deleteTask.php?id=${id}`;
                 }
 
             });
