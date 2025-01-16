@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $num =  mysqli_num_rows($mailSMTPresult);
     if ($num = 1) {
         while ($row = mysqli_fetch_assoc($mailSMTPresult)) {
-            print_r($row);
             try {
                 //Server settings
                 // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
@@ -61,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // if ($result) {
+    if ($result) {
 
-    //     header("Location: ../../task.php");
-    // } else {
-    //     echo ' error';
-    // }
+        header("Location: ../../task.php");
+    } else {
+        echo ' error';
+    }
 }
