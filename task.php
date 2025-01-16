@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .ts-control {
+            border: none !important;
+            padding: 0 !important;
+        }
+    </style>
 </head>
 <script src="sweetalert2.all.min.js"></script>
 <script src="jquery-3.7.1.min.js"></script>
@@ -104,19 +110,7 @@
                     </div>
                     <div class="form-group">
                         <label class="form-check-label" for="exampleCheck1">Assigned to</label>
-                        <select class="custom-select" name="assignedTo" id="inputGroupSelect01">
-                            <?php
-                            include './api/task/config.php';
-
-                            $query = mysqli_query($conn, "SELECT * FROM `users`");
-                            while ($row = mysqli_fetch_assoc($query)) {
-                                echo '
-                                    <option value="' . $row['id'] . '">' . $row['name'] . '</option>
-                                ';
-                            }
-
-                            ?>
-                        </select>
+                        <select id="select-state" placeholder="Pick a repository..." multiple></select>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -139,7 +133,7 @@
                             echo '
                                     <div class="card-body">
                                         <h5 class="class-title"><a href="task.php?id=' . $row['id'] . '">' . $row['title'] . '</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteTask('. $row['id'].')">Delete</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteTask(' . $row['id'] . ')">Delete</button>
                                         </h5> 
                                         <h6 class="card-subtitle mb-2 text-dark">Created By ~ ' . $_SESSION['name'] . '</h6>
                                         <p class="card-text">' . substr($row['description'], 0, 50) . '</p>
@@ -168,7 +162,7 @@
                             echo '
                                     <div class="card-body">
                                         <h5 class="class-title"><a href="task.php?id=' . $row['id'] . '">' . $row['title'] . '</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteTask('. $row['id'].')">Delete</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteTask(' . $row['id'] . ')">Delete</button>
                                         </h5> 
                                         <h6 class="card-subtitle mb-2 text-dark">Created By ~ ' . $_SESSION['name'] . '</h6>
                                         <p class="card-text">' . $row['description'] . '</p>
@@ -197,7 +191,7 @@
                             echo '
                                     <div class="card-body">
                                         <h5 class="class-title"><a href="task.php?id=' . $row['id'] . '">' . $row['title'] . '</a>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteTask('. $row['id'].')">Delete</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteTask(' . $row['id'] . ')">Delete</button>
                                         </h5> 
                                         <h6 class="card-subtitle mb-2 text-dark">Created By ~ ' . $_SESSION['name'] . '</h6>
                                         <p class="card-text">' . $row['description'] . '</p>
@@ -216,30 +210,76 @@
     </div>
 
     <script>
+        // tomSelect Input code start
+        const selectUser = new TomSelect("#select-state", {
+            load: function(query, callback) {
+                // const api = 'api/task/get-all-user.php?' + encodeURIComponent(query);
+                // fetch(api)
+                //     .then(response => response.json())
+                //     .then(json => {
+                //         // callback(json.items);
+                //         console.log(json.items);
+                        
+                //     }).catch(() => {
+                //         callback();
+                //     });
+
+                $.ajax({
+                    url: "api/users/get-all-user.php",
+                    data: {
+                        search: query
+                    },
+                    dataType: "json",
+                    success: function (res){
+                        console.log(res)
+                        if(res.success){
+                            callback(res.data)
+                        }
+                    },
+                    error: function(err){
+                        console.log(res.responseText)
+                    }
+                })
+            },
+            render: {
+                option: function(data, escape){
+                    console.log(data)
+                    return '<div>' +
+                        '<span class="title">' + escape(data.id) + '</span>' +
+                        '<span class="url">' + escape(data.name) + '</span>' +
+                    '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.name) + '</div>';
+                }
+            }
+        });
+
+        // delete task funtion start
         function deleteTask(id) {
             console.log(id);
-            
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-                    if(result.value) {
-                        
-                        window.location.href = `./api/task/deleteTask.php?id=${id}`;
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your file has been deleted.",
-                            icon: "success"
-                        });
-                    }
-                    
-                });
-            }
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.value) {
+
+                    window.location.href = `./api/task/deleteTask.php?id=${id}`;
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+
+            });
+        }
     </script>
 </body>
 
