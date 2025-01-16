@@ -207,8 +207,8 @@
         // tomSelect Input code start
         const selectUser = new TomSelect("#select-state", {
             valueField: "id",
-            labelField: "name",
-            searchField: 'name',
+            labelField: "title",
+            searchField: 'title',
             load: function(query, callback) {
                 $.ajax({
                     url: "api/users/get-all-user.php",
@@ -229,14 +229,12 @@
             },
             render: {
                 option: function(data, escape){
-                    console.log(data)
                     return '<div>' +
-                        '<div class="url">' + escape(data.name) + '</div>' +
-                        '<div class="text-muted">' + escape(data.email) + '</div>' +
+                        '<div class="url">' + escape(data.title) + '</div>'
                     '</div>';
                 },
                 item: function(data, escape) {
-                    return '<div>' + escape(data.name) + '</div>';
+                    return '<div>' + escape(data.title) + '</div>';
                 }
             }
         });
