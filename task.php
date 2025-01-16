@@ -217,6 +217,8 @@
 
     <script>
         function deleteTask(id) {
+            console.log(id);
+            
                 Swal.fire({
                     title: "Are you sure?",
                     text: "You won't be able to revert this!",
@@ -227,8 +229,8 @@
                     confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
                     if(result.value) {
-                        window.location("./api/task/deleteTask.php");
                         
+                        window.location.href = `./api/task/deleteTask.php?id=${id}`;
                         Swal.fire({
                             title: "Deleted!",
                             text: "Your file has been deleted.",
