@@ -5,12 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-        .ts-control {
-            border: none !important;
-            padding: 0 !important;
-        }
-    </style>
 </head>
 <script src="sweetalert2.all.min.js"></script>
 <script src="jquery-3.7.1.min.js"></script>
@@ -212,18 +206,10 @@
     <script>
         // tomSelect Input code start
         const selectUser = new TomSelect("#select-state", {
+            valueField: "id",
+            labelField: "name",
+            searchField: 'name',
             load: function(query, callback) {
-                // const api = 'api/task/get-all-user.php?' + encodeURIComponent(query);
-                // fetch(api)
-                //     .then(response => response.json())
-                //     .then(json => {
-                //         // callback(json.items);
-                //         console.log(json.items);
-                        
-                //     }).catch(() => {
-                //         callback();
-                //     });
-
                 $.ajax({
                     url: "api/users/get-all-user.php",
                     data: {
@@ -245,8 +231,8 @@
                 option: function(data, escape){
                     console.log(data)
                     return '<div>' +
-                        '<span class="title">' + escape(data.id) + '</span>' +
-                        '<span class="url">' + escape(data.name) + '</span>' +
+                        '<div class="url">' + escape(data.name) + '</div>' +
+                        '<div class="text-muted">' + escape(data.email) + '</div>' +
                     '</div>';
                 },
                 item: function(data, escape) {
